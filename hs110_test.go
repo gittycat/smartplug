@@ -1,25 +1,38 @@
 package smartplug
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestEncryption(t *testing.T) {
-	in := `ABC abc 123 !@#$%"{}`
+	in := `ABC abc 0123 -+=:*!@#$%'"{}\n`
 	enc := encrypt(in)
 	out := decrypt(enc[4:])
-
 	if in != out {
-		t.Errorf("expected %s, got %s", in, out)
+		t.Errorf("\"%s\"  !=  \"%s\"", in, out)
 	}
 }
 
-func TestCmdInfo(t *testing.T) {
-	msg, err := send("192.168.1.9:9999", cmdInfo)
-	if err != nil {
-		t.Errorf("Error sending %w", err)
+func TestCommands(t *testing.T) {
+
+	skip := map[string]bool{
+		"off":       true,
+		"ledoff":    true,
+		"antitheft": true,
+		"reboot":    true,
+		"reset":     true,
 	}
 
-	fmt.Printf("Message: %s\n", msg)
+	for name, cmd := range commands {
+
+		// Skip the commands if it's in the exception list
+		// We don't want to reset, reboot, etc...
+		if skip[name] {
+			continue
+		}
+		_, err := send("192.168.1.9:9999", cmd)
+		if err != nil {
+			t.Errorf("sending cmd %s  error: %w", name, err)
+		}
+	}
 }
