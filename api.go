@@ -54,9 +54,8 @@ type SmartplugMeter struct {
 }
 
 func NewSmartplug(ip string, port string) *Smartplug {
-	// TODO: check whether ip and port are valid using net.IP.parse(str)
 	addr := fmt.Sprintf("%s:%s", ip, port)
-	return &Smartplug{addr, nil}
+	return &Smartplug{addr}
 }
 
 //

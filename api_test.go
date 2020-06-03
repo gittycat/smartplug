@@ -3,6 +3,7 @@ package smartplug
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestEncryption(t *testing.T) {
@@ -11,6 +12,20 @@ func TestEncryption(t *testing.T) {
 	out := decrypt(enc[4:])
 	if in != out {
 		t.Errorf("\"%s\"  !=  \"%s\"", in, out)
+	}
+}
+
+func TestLEDs(t *testing.T) {
+	p := NewSmartplug("192.168.1.9", "9999")
+
+	err := p.LedOff()
+	if err != nil {
+		t.Errorf("Turning LED off. %w", err)
+	}
+	time.Sleep(2 * time.Second)
+	err = p.LedOn()
+	if err != nil {
+		t.Errorf("Turning LED back on. %w", err)
 	}
 }
 
