@@ -15,27 +15,28 @@ Here's a minimal program to retrieve Power and Current metrics.
 ```
 package main
 
-import "github.com/gittycat/smartplug"
+import (
+	"fmt"
+	"github.com/gittycat/smartplug"
+)
 
-public main() {
+func main() {
 	p := smartplug.NewSmartplug("192.168.1.9", "9999") // ip, port
-    info, err := p.Meter()
-    if err != nil {
-        fmt.Printf("error retrieving metrics: %s\n", err)
-        return
-    }
-    fmt.Printf("Power: %d mW  Current: %d mA\n", info.PowerMw, info.CurrentMa)
+	info, err := p.Meter()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Power: %d mW  Current: %d mA\n", info.PowerMw, info.CurrentMa)
 }
-
 ```
 
-The included example/example.go program shows how to retrieve the metrics at intervals.
+The included `example/example.go` program shows how to retrieve the metrics at intervals.
 
 
 
 ## Credits
-The encryption and decryption is based on the elegant python code from SoftsCheck
-https://github.com/softScheck/tplink-smartplug
+The encryption and decryption is based on the [python code from SoftsCheck]
+(https://github.com/softScheck/tplink-smartplug)
 
 This API is possible due to the reverse engineering work done
 by Lubomir Stroetmann and Tobias Esser at SoftsCheck.
