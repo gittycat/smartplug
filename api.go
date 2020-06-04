@@ -136,12 +136,12 @@ func send(addr string, cmd string) (string, error) {
 		return "", fmt.Errorf("Could not write to smartplug: %w", err)
 	}
 
-	buf := make([]byte, 2048) // No response is more than 2K long
-	n, err := conn.Read(buf)  // Read up to 2K and return (do not wait for EOF)
+	buf := make([]byte, 2048) // 2Kb is more than enough for all requests
+	n, err := conn.Read(buf)  // Only read 2kb max. ie do not wait for EOF
 	if err != nil {
 		return "", fmt.Errorf("Could not read from smartplug: %w", err)
 	}
-	msg := decrypt(buf[4:n]) // Strip first 4 bytes (length of message)
+	msg := decrypt(buf[4:n]) // Strip first 4 bytes
 	return msg, nil
 }
 
@@ -174,9 +174,6 @@ func decrypt(buf []byte) string {
 	key := byte(171)
 	result := make([]byte, len(buf))
 	for i, b := range buf {
-		// if b == 0x00 {
-		// 	break
-		// }
 		result[i] = key ^ b
 		key = b
 	}
